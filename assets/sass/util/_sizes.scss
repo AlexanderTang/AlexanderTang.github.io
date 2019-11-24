@@ -30,3 +30,11 @@ $sizes: 12;
   }
 }
 @include padding-classes;
+
+@mixin width-classes {
+    @for $i from 1 through 10 {
+        $width: $i * 10%;
+        .width--#{$i} {width: $width;}
+    }
+}
+@include width-classes;
