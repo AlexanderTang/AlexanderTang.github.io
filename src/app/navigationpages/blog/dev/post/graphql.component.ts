@@ -10,7 +10,7 @@ import {PostCategory} from '../../../../core/enum/postCategory';
 export class GraphqlComponent extends AbstractBlogPost {
 
     postTitle(): string {
-        return 'GraphQL with Spring Boot + MongoDB';
+        return 'GraphQL with Spring Boot';
     }
 
     postDate(): Date {
@@ -18,10 +18,13 @@ export class GraphqlComponent extends AbstractBlogPost {
     }
 
     postAbstract(): string {
-        return undefined;
+        return "GraphQL provides an alternative to today's common REST API architecture. It aims to \
+        put clients in charge what data is retrieved while still allowing the server to dictate \
+        what data is accessible. Read more to learn how this works out in practice with a \
+        Springboot/Angular application.";
     }
 
     postCategories(): PostCategory[] {
-        return [PostCategory.GraphQL];
+        return [PostCategory.GraphQL, PostCategory.Java, PostCategory.Spring];
     }
 }
