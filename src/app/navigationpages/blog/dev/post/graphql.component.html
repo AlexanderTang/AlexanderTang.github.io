@@ -1,30 +1,299 @@
 <app-blog-post
     [postTitle]="postTitle()"
-    [postDate]="postDate()">
-    <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus, vero, obcaecati, aut,
-        error quam sapiente nemo saepe quibusdam sit excepturi nam quia corporis eligendi eos magni recusandae
-        laborum minus inventore?</p>
+    [postDate]="postDate()"
+    [postAbstract]="postAbstract()">
 
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut, tenetur natus doloremque laborum quos iste
-        ipsum rerum obcaecati impedit odit illo dolorum ab tempora nihil dicta earum fugiat. Temporibus,
-        voluptatibus.</p>
+    <p>Most HTTP API endpoints today are defined using REST architecture. Using Spring Boot 2 controllers in Java, it
+        has become trivial to create an API for servers and for the most part this is all that is needed. But everything
+        has weaknesses and GraphQL provides a solution for one of them.</p>
 
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eos, doloribus, dolorem iusto blanditiis unde
-        eius illum consequuntur neque dicta incidunt ullam ea hic porro optio ratione repellat perspiciatis.
-        Enim, iure!</p>
+    <p>Consider that you are building a resource server that exposes data to many different clients, which is typical in
+        a microservices architecture for example. The server is in full control over what data is served, but what if
+        each client needs a different subset of that data? A single REST endpoint means that every client is downloading
+        everything while they may need just one specific field. Providing an endpoint for each client will overload the
+        API as well as the backend code. GraphQL solves this by letting the clients decide which fields they want and
+        notify the server so this will be the only data they get. I will show how GraphQL can easily be added to an
+        existing Spring Boot application.</p>
 
-    <blockquote class="blockquote">
-        <p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a
-            ante.</p>
-        <footer class="blockquote-footer">Someone famous in
-            <cite title="Source Title">Source Title</cite>
-        </footer>
-    </blockquote>
+    <h3>Existing application</h3>
 
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error, nostrum, aliquid, animi, ut quas placeat
-        totam sunt tempora commodi nihil ullam alias modi dicta saepe minima ab quo voluptatem obcaecati?</p>
+    <p>Let's start from a basic working Spring Boot application. There are REST controllers which communicate with an
+        embedded MongoDB through repository classes. There are 2 mongo collections which coincide with the following
+        model objects:</p>
 
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Harum, dolor quis. Sunt, ut, explicabo, aliquam
-        tenetur ratione tempore quidem voluptates cupiditate voluptas illo saepe quaerat numquam recusandae?
-        Qui, necessitatibus, est!</p>
+    <div class="row">
+        <div class="col-6">
+            <pre><code [languages]="['jadva']" [highlight]="
+    'public class Author {
+    private String id;
+    private String name;
+    private String thumbnail;
+    private List<Post> posts;'">
+    </code></pre>
+        </div>
+        <div class="col-6">
+            <pre><code [languages]="['java']" [highlight]="
+    'public class Post {
+    private String id;
+    private long timestamp;
+    private String title;
+    private String text;
+    private String category;
+    private String authorId;'">
+    </code></pre>
+        </div>
+    </div>
+
+    <p>This initial state can be pulled from <a
+        href="https://github.com/AlexanderTang/graphql-springboot-angular-example/tree/springboot-server-initial">branch
+        'springboot-server-initial' of my example git repository</a>. Simply run the Spring Boot application and
+        you can interact with the REST API. I use Postman for the job:</p>
+
+    <pre><code [highlight]="'localhost:8080/posts-by-author?authorId=Alfred'"></code></pre>
+
+    <p>Output:</p>
+
+    <pre><code [languages]="['json']" [highlight]="'[
+    {
+        &quot;id&quot;: &quot;d3ffb489-ac4f-4873-bc99-8c62a59d0939&quot;,
+        &quot;timestamp&quot;: 60,
+        &quot;title&quot;: &quot;Example 3&quot;,
+        &quot;text&quot;: &quot;some MORE content&quot;,
+        &quot;category&quot;: &quot;cat3&quot;,
+        &quot;authorId&quot;: &quot;Alfred&quot;
+    }
+]'">
+    </code></pre>
+
+    <h3>Setup GraphQL</h3>
+
+    <p>Adding GraphQL functionalities to a Spring Boot server is very easy. Add the following Maven dependencies:</p>
+
+    <pre><code [languages]="['xml']" [highlight]="'<dependency>
+    <groupId>com.graphql-java</groupId>
+    <artifactId>graphql-spring-boot-starter</artifactId>
+    <version>5.0.2</version>
+</dependency>
+<dependency>
+    <groupId>com.graphql-java</groupId>
+    <artifactId>graphql-java-tools</artifactId>
+    <version>5.2.4</version>
+</dependency>
+<dependency>
+    <groupId>com.graphql-java</groupId>
+    <artifactId>graphiql-spring-boot-starter</artifactId>
+    <version>5.0.2</version>
+</dependency>'">
+    </code></pre>
+
+    <p>which will enable the endpoints <code>/graphql</code> and <code>/graphiql</code>. <code>/graphql</code> is the
+        endpoint that clients use to process their queries. <code>/graphiql</code> is a test
+        endpoint that provides a stand-alone user interface for testing queries with.</p>
+
+    <p>The next step is to define GraphQL data resolver classes. These resolver classes define the GraphQL API endpoints
+        that can be queried. In our example we have <b>RootQueryResolver</b> that defines <i>GET</i>
+        methods:</p>
+
+    <pre><code [languages]="['java']"
+               [highlight]="'public class RootQueryResolver implements GraphQLQueryResolver {
+    private PostRepository postRepository;
+    private AuthorRepository authorRepository;
+
+    public List<Author> getAllAuthors(){ return authorRepository.findAll(); }
+    public List<Post> getAllPosts(){ return postRepository.findAll(); }
+    public List<Post> getPosts(String authorId){ return postRepository.getAllByAuthorId(authorId); }'">
+    </code></pre>
+
+    <p>and we have <b>PostMutation</b> which defines methods that can change the state of our
+        <b>Post</b> model (think <i>POST</i>, <i>PUT</i>, <i>DELETE</i> methods). This class
+        implements <b>GraphQLMutationResolver</b> and is defined as follows:</p>
+
+    <pre><code [languages]="['java']"
+               [highlight]="'public class PostMutation implements GraphQLMutationResolver {
+    private PostRepository postRepository;
+
+    public Post writePost(String title, String text, String category, String authorId) {
+        Post post = new Post();
+        post.setId(UUID.randomUUID().toString());
+        post.setTitle(title);
+        post.setText(text);
+        post.setCategory(category);
+        post.setAuthorId(authorId);
+        postRepository.save(post);
+        return post;
+    }'">
+    </code></pre>
+
+    <p>The final step is to define a schema that exposes the GraphQL API. The schema in our example will define the two
+        models and the two Resolver classes as available types. Ensure the schema filename has extension
+        <code class="github-code">.graphqls</code> and put it under the <code>/resources</code> folder.</p>
+
+    <pre><code [highlight]="'type Post {
+    id: ID!
+    title: String!
+    text: String!
+    category: String
+    authorId: String!
+}
+
+type Author {
+    id: ID!
+    name: String!
+    thumbnail: String
+    posts: [Post]!
+}
+
+type Query {
+    getAllAuthors: [Author]!
+    getAllPosts: [Post]!
+    getPosts(authorId: String): [Post]!
+}
+
+type Mutation {
+    writePost(title: String!, text: String!, category: String, authorId: String) : Post!
+}'">
+    </code></pre>
+
+    <p>The exclamation marks in the schema indicate that the field is non-nullable.</p>
+
+    <p>The extended server implementation can be pulled from <a
+        href="https://github.com/AlexanderTang/graphql-springboot-angular-example/tree/graphql-server">branch
+        'graphql-server'</a>. You can now play around with the endpoints.</p>
+
+    <h3>Using the GraphQL endpoints</h3>
+
+    <h5>Graph<i>i</i>QL</h5>
+
+    <p>Navigate to <code class="github-code">localhost:8080/graphiql</code> to open up a user interface. An example
+        query would be:</p>
+
+    <pre><code [highlight]="'{
+    getPosts(authorId: &quot;Stephen&quot;){
+        title
+    }
+}'"></code></pre>
+
+    <p>which has the following output:</p>
+
+    <pre><code [highlight]="'{
+  &quot;data&quot;: {
+    &quot;getPosts&quot;: [
+      {
+        &quot;title&quot;: &quot;Example 1&quot;
+      },
+      {
+        &quot;title&quot;: &quot;Example 2&quot;
+      },
+      {
+        &quot;title&quot;: &quot;Example 5&quot;
+      }
+    ]
+  }
+}'"></code></pre>
+
+    <p>The posts are filtered by <i>authorId</i> and only the requested fields are returned by
+        the server. This can be validated by checking the response in the Network tab of your browser.</p>
+
+    <h5>POST request on <code>/graphql</code></h5>
+
+    <p>In Postman a POST request is executed on <code class="github-code">localhost:8080/graphql</code> with body:</p>
+
+    <pre><code [highlight]="'{
+    &quot;query&quot;: &quot;{ getAllAuthors{name, posts {title} }}&quot;
+}'"></code></pre>
+
+    <p>The POST request body is a JSON type that has a single key "query" and as value the full stringified query. The
+        response body will contain the name of every author and the title of their posts:</p>
+
+    <pre><code class="max-codeblock-height" [languages]="['json']" [highlight]="'{
+    &quot;data&quot;: {
+        &quot;getAllAuthors&quot;: [
+            {
+                &quot;name&quot;: &quot;Stephen&quot;,
+                &quot;posts&quot;: [
+                    {
+                        &quot;title&quot;: &quot;Example 1&quot;
+                    },
+                    {
+                        &quot;title&quot;: &quot;Example 2&quot;
+                    },
+                    {
+                        &quot;title&quot;: &quot;Example 5&quot;
+                    }
+                ]
+            },
+            {
+                &quot;name&quot;: &quot;Alfred&quot;,
+                &quot;posts&quot;: [
+                    {
+                        &quot;title&quot;: &quot;Example 3&quot;
+                    }
+                ]
+            },
+            {
+                &quot;name&quot;: &quot;Bob&quot;,
+                &quot;posts&quot;: [
+                    {
+                        &quot;title&quot;: &quot;Example 4&quot;
+                    }
+                ]
+            }
+        ]
+    }
+}'"></code></pre>
+
+    <p>The latest version of Postman provides support for a more visually appealing syntax, similar to Graph<i>i</i>QL:
+    </p>
+
+    <div>
+        <img class="img-fluid rounded mb-4" src="assets/images/postman_graphql.png" alt="">
+    </div>
+
+    <h3>Angular client support</h3>
+
+    <p>Angular clients can use <a href="https://www.npmjs.com/package/apollo-angular">Apollo Angular</a> to easily
+        send GraphQL queries to the server. Run <code class="github-code">ng add apollo-angular</code> and set the URI
+        of the newly created GraphQL module to <code class="github-code">localhost:8080/graphql</code>. That's it!
+        Inject the <b>Apollo</b> service in the component that needs to send a query and use
+        one of the methods available, for example:</p>
+
+    <pre><code [languages]="['typescript']" [highlight]="'this.apollo.watchQuery({
+    query: gql`
+      {
+          getPosts(authorId: &quot;Stephen&quot;) {
+              title
+          }
+      }
+    `
+}).valueChanges.subscribe(result => {
+  this.postsData = result.data;
+});'"></code></pre>
+
+    <p>The full implementation can be pulled from <a
+        href="https://github.com/AlexanderTang/graphql-springboot-angular-example/tree/graphql-with-client">branch
+        'graphql-with-client'</a>.
+
+    <h3>When to use GraphQL</h3>
+
+    <p>As shown in this example, GraphQL can easily be implemented to work alongside with REST API structures. There is
+        no need to pick one over the other. GraphQL is very useful when many clients need to retrieve the same dataset,
+        but need a different subselection of it. This can help reduce network traffic, which is important for web
+        applications.</p>
+
+    <p>For simple queries that return little data, using GraphQL may not be worth it. The client needs to send more data
+        since the server needs to know which fields to return. The server needs to process this extra information
+        which may have an impact on performance. However, since we are talking about small data, this impact on network
+        traffic and serverside processing may be negligible.</p>
+
+    <p>A bigger problem occur if the server output contains a tree with indefinite output. GraphQL can not query in
+        indefinite depth, so the query may have to be split into multiple queries.</p>
+
+    <p>Another difficult problem occurs when <a
+        href="https://labs.getninjas.com.br/pain-points-of-graphql-7e83ba5ddef7#c2f0">the client wants to cache
+        the query responses.</a></p>
+
+    <p>In conclusion, use the right tool for the right problem! GraphQL is a great fit for servers with many different
+        clients and different requirements, such as in a microservices architecture. But keep in mind the
+        current limitations.</p>
+
 </app-blog-post>

@@ -5,7 +5,8 @@ import {PostCategory} from '../../../../core/enum/postCategory';
 
 @Component({
     selector: 'app-graph-ql',
-    templateUrl: './graphql.component.html'
+    templateUrl: './graphql.component.html',
+    styleUrls: ['./graphql.component.scss']
 })
 export class GraphqlComponent extends AbstractBlogPost {
 
@@ -14,7 +15,7 @@ export class GraphqlComponent extends AbstractBlogPost {
     }
 
     postDate(): Date {
-        return new Date(2019, 11, 10);
+        return new Date(2019, 11, 1);
     }
 
     postAbstract(): string {

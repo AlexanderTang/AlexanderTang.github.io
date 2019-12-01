@@ -6,7 +6,7 @@ import {RoutesWithPathPrefix} from '../../../shared/interfaces';
 
 const ROUTES: Routes = [
     {path: '', component: GamingBlogComponent},
-    {path: 'placeholder', data: {breadcrumb: 'Placeholder'}, component: PlaceholderComponent}
+    // {path: 'placeholder', data: {breadcrumb: 'Placeholder'}, component: PlaceholderComponent}
 ];
 
 export const GAME_BLOG_ROUTES: RoutesWithPathPrefix = {
