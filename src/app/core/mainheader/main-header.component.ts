@@ -8,10 +8,7 @@ import {Component} from '@angular/core';
 export class MainHeaderComponent {
     mainHeadersCollapsed: boolean = true;
 
-    constructor() {}
-
     public toggleMainHeadersCollapsed(): void {
-        console.log(this.mainHeadersCollapsed)
         this.mainHeadersCollapsed = !this.mainHeadersCollapsed;
     }
 }

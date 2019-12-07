@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {Router, UrlSegment, UrlSegmentGroup} from '@angular/router';
 
 @Component({
     selector: 'app-custom-breadcrumb',
@@ -9,16 +9,16 @@ export class CustomBreadcrumbComponent {
 
     private blacklistedPaths: string[] = [''];
 
-    constructor(private activatedRoute: ActivatedRoute) {
+    constructor(private router: Router) {
     }
 
     hideBreadcrumb(): boolean {
-        try {
-            return this.blacklistedPaths
-                .some((path: string) => path === this.activatedRoute.snapshot.firstChild.routeConfig.path);
-        } catch (e) {
+        let primaryUrlSegmentGroup: UrlSegmentGroup = this.router.parseUrl(this.router.url).root.children['primary'];
+        if(primaryUrlSegmentGroup == null){
             return true;
         }
+        let urlPath = primaryUrlSegmentGroup.segments.map((segment: UrlSegment) => segment.path).join('/');
+        return this.blacklistedPaths.some((path: string) => path === urlPath);
     }
 
 }

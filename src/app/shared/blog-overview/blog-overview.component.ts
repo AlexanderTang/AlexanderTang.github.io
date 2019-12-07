@@ -13,7 +13,7 @@ export class BlogOverviewComponent implements OnInit {
     @Input() blogTitle: string;
     @Input() blogPosts: IBlogPost[] = [];
 
-    currentPage: number;
+    currentPage: number = 1;
     pageSize: number = 5;
 
     constructor(private activatedRoute: ActivatedRoute,
@@ -52,11 +52,16 @@ export class BlogOverviewComponent implements OnInit {
     }
 
     private initCurrentPage(): void {
-        this.currentPage = +this.activatedRoute.snapshot.queryParamMap.get('page');
-        if (isNaN(this.currentPage) || this.currentPage < 1 ||
-            (this.currentPage - 1) * this.pageSize + 1 > this.blogPosts.length) {
+        let pageParam: number = +this.activatedRoute.snapshot.queryParamMap.get('page');
+        if (isNaN(pageParam) || pageParam < 1 || this.maximumPageSizeExceeded(pageParam)) {
             this.setCurrentPage(1);
+        } else {
+            this.setCurrentPage(pageParam);
         }
+    }
+
+    private maximumPageSizeExceeded(pageParam: number): boolean {
+        return (pageParam - 1) * this.pageSize + 1 > this.blogPosts.length;
     }
 
     private setCurrentPage(page: number): void {
@@ -65,6 +70,6 @@ export class BlogOverviewComponent implements OnInit {
             relativeTo: this.activatedRoute,
             queryParams: {page: page},
             queryParamsHandling: 'merge'
-        })
+        });
     }
 }
