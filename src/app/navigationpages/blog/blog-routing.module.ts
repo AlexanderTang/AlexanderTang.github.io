@@ -10,6 +10,10 @@ const BLOG_ROUTES: Routes = [
         path: 'game', data: {breadcrumb: 'Gaming Blog'},
         loadChildren: () => import('./gaming/gaming-blog.module').then(m => m.GamingBlogModule)
     },
+    {
+        path: 'cn-study', data: {breadcrumb: 'Chinese Study Blog'},
+        loadChildren: () => import('./chinese/chinese-blog.module').then(m => m.ChineseBlogModule)
+    },
     {path: '**', redirectTo: 'dev'} // catch any unfound routes and redirect to dev blog page
 ];
 

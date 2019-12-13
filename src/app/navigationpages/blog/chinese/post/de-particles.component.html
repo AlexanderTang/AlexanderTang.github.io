@@ -1,0 +1,74 @@
+<app-blog-post
+    [postTitle]="postTitle()"
+    [postDate]="postDate()"
+    [postAbstract]="postAbstract()">
+
+    <h2>的 particle</h2>
+
+    <p>Starting with the easiest of the 3, 的 is commonly understood to be used in the context of possessing
+        something. If you would use <i>my, your, his/her</i> in English, then you will most likely use 的.</p>
+
+    <p>
+        <ng-piao-liang-hanzi [chineseCharacters]="'我的名字'"></ng-piao-liang-hanzi>
+        - <i>my name</i></p>
+
+    <p>
+        <ng-piao-liang-hanzi [chineseCharacters]="'你的看法'"></ng-piao-liang-hanzi>
+        - <i>your view/opinion</i></p>
+
+    <p>As seen in the second example, a possession does not necessarily correspond to a physical object. You may also
+        possess an opinion.</p>
+
+    <p>But 的 is also used when describing something:</p>
+
+    <p>
+        <ng-piao-liang-hanzi [chineseCharacters]="'红色的苹果'"></ng-piao-liang-hanzi>
+        - <i>red apple</i></p>
+
+    <p>To think about this in English terms we could phrase it as "apple <i>that is</i> red". So in cases where you
+        would use "object <i>that is</i> some attribute", you would use 的. Just keep in mind that the ordering of object
+        and attribute is reversed in Chinese.
+    </p>
+
+    <h2>得 particle</h2>
+
+    <p>In situations where you express the 'ability' to do something you would use 得. For example:</p>
+
+    <p>
+        <ng-piao-liang-hanzi [chineseCharacters]="'你看得到吗？'"></ng-piao-liang-hanzi>
+        - <i>Are you able to see it?</i></p>
+
+    <p>Here 得 is used to emphasize the ability to see. From my gathering it is almost equivalent to the same sentence
+        without 得:</p>
+
+    <p>
+        <ng-piao-liang-hanzi [chineseCharacters]="'你看到吗？'"></ng-piao-liang-hanzi>
+        - <i>Can you see it?</i></p>
+
+    <p>The second sentence feels more appropriate to use when you want to ask if the person is currently able to see
+        something, while the first sentence asks if the person is able to see without him/her necessarily looking right
+        now. The nuance is very small. The English translations I provided can also be considered to be synonymous
+        while having some of that same nuance.</p>
+
+    <p>不 can be used with the opposite meaning of 得 to express the 'inability' to do something:</p>
+
+    <p>
+        <ng-piao-liang-hanzi [chineseCharacters]="'你看不到吗？'"></ng-piao-liang-hanzi>
+        - <i>Are you not able to see it?</i></p>
+
+    <h2>地 particle</h2>
+
+    <p>地 is used in situations where in English you would use the suffix <i>-ly</i>, such as simply or slowly:</p>
+
+    <p>
+        <ng-piao-liang-hanzi [chineseCharacters]="'慢慢地'"></ng-piao-liang-hanzi>
+        - <i>slowly</i></p>
+
+    <p>
+        <ng-piao-liang-hanzi [chineseCharacters]="'他慢慢地吃饭'"></ng-piao-liang-hanzi>
+        - <i>He eats slowly</i></p>
+
+    <br>
+    <p><i>Source: This post is mostly taken from <a href="https://www.chineseboost.com/grammar/de-grammar-summary/">chineseboost.com</a>.</i>
+    </p>
+</app-blog-post>
