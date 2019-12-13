@@ -7,10 +7,11 @@ import {GraphqlComponent} from './post/graphql.component';
 import {ReactiveSpringComponent} from './post/reactive-spring.component';
 import {RsHsComponent} from './post/rs-hs.component';
 import {HighlightModule} from 'ngx-highlightjs';
+import {NgPlhComponent} from './post/ng-plh.component';
 
 @NgModule({
     imports: [SharedModule, DeveloperBlogRoutingModule, HighlightModule],
-    exports: [DeveloperBlogComponent, GraphqlComponent, RsHsComponent, ReactiveSpringComponent],
+    exports: [DeveloperBlogComponent, GraphqlComponent, RsHsComponent, ReactiveSpringComponent, NgPlhComponent],
     declarations: [DeveloperBlogRoutingModule.components],
     providers: [{provide: 'DEV_ROUTES', useValue: DEV_BLOG_ROUTES}]
 })

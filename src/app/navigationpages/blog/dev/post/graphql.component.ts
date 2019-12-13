@@ -26,6 +26,6 @@ export class GraphqlComponent extends AbstractBlogPost {
     }
 
     postCategories(): PostCategory[] {
-        return [PostCategory.GraphQL, PostCategory.Java, PostCategory.Spring];
+        return [PostCategory.GraphQL, PostCategory.Java, PostCategory.Spring, PostCategory.TechTools];
     }
 }

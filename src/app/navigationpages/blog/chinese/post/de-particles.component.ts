@@ -14,7 +14,7 @@ export class DeParticlesComponent extends AbstractBlogPost {
     }
 
     postDate(): Date {
-        return new Date(2019, 11, 8);
+        return new Date(2019, 11, 13);
     }
 
     postAbstract(): string {

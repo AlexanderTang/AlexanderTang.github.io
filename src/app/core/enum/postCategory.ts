@@ -1,5 +1,5 @@
 'use strict';
 
 export enum PostCategory {
-    GraphQL, Spring, Security, Java, ChineseGrammar
+    GraphQL, Spring, Security, Java, ChineseGrammar, Angular, TechTools
 }
