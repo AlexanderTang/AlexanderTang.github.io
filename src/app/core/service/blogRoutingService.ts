@@ -4,6 +4,7 @@ import {DEV_BLOG_ROUTES} from '../../navigationpages/blog/dev/developer-blog-rou
 import {GAME_BLOG_ROUTES} from '../../navigationpages/blog/gaming/gaming-blog-routing.module';
 import {IBlogPost, RoutesWithPathPrefix} from '../../shared/interfaces';
 import {BlogPostUtils} from '../util/blogPostUtils';
+import {CHINESE_BLOG_ROUTES} from '../../navigationpages/blog/chinese/chinese-blog-routing.module';
 
 @Injectable()
 export class BlogRoutingService {
@@ -17,7 +18,8 @@ export class BlogRoutingService {
     public getAllRoutes(): RoutesWithPathPrefix[] {
         return [
             DEV_BLOG_ROUTES,
-            GAME_BLOG_ROUTES
+            GAME_BLOG_ROUTES,
+            CHINESE_BLOG_ROUTES
         ];
     }
 }
