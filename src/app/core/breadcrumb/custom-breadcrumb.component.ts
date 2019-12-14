@@ -12,6 +12,10 @@ export class CustomBreadcrumbComponent {
     constructor(private router: Router) {
     }
 
+    isHomeBreadcrumbItem(breadcrumbName: string): boolean {
+        return breadcrumbName === 'Home';
+    }
+
     hideBreadcrumb(): boolean {
         let primaryUrlSegmentGroup: UrlSegmentGroup = this.router.parseUrl(this.router.url).root.children['primary'];
         if(primaryUrlSegmentGroup == null){
