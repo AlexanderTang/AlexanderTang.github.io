@@ -4,8 +4,10 @@ import {CustomBreadcrumbComponent} from './custom-breadcrumb.component';
 import {BreadcrumbComponent} from 'xng-breadcrumb';
 import {CapitalizePipe} from '../../shared/pipes/capitalize.pipe';
 import {Router} from '@angular/router';
+import {SpyObject} from '@ngneat/spectator';
 
 describe('CustomBreadcrumbComponent', () => {
+    let routerMock: SpyObject<Router>;
     let spectator: SpectatorRouting<CustomBreadcrumbComponent>;
     const createComponent = createRoutingFactory({
         detectChanges: false,
@@ -17,11 +19,11 @@ describe('CustomBreadcrumbComponent', () => {
     });
 
     beforeEach(() => {
-        spectator = createComponent()
+        spectator = createComponent();
+        routerMock = spectator.get<Router>(Router);
     });
 
     it('isHomeBreadcrumbItem - Home', () => {
-        let routerMock = spectator.get<Router>(Router);
         routerMock.parseUrl.andReturn({root: {children: {'primary': {segments: [{path: ''}]}}}});
         spectator.detectChanges();
 
@@ -29,7 +31,6 @@ describe('CustomBreadcrumbComponent', () => {
     });
 
     it('isHomeBreadcrumbItem - home', () => {
-        let routerMock = spectator.get<Router>(Router);
         routerMock.parseUrl.andReturn({root: {children: {'primary': {segments: [{path: ''}]}}}});
         spectator.detectChanges();
 
@@ -37,7 +38,6 @@ describe('CustomBreadcrumbComponent', () => {
     });
 
     it('hideBreadcrumb - hide on homepage', () => {
-        let routerMock = spectator.get<Router>(Router);
         routerMock.parseUrl.andReturn({root: {children: {'primary': {segments: [{path: ''}]}}}});
         spectator.detectChanges();
 
@@ -45,7 +45,6 @@ describe('CustomBreadcrumbComponent', () => {
     });
 
     it('hideBreadcrumb - show on a page other than homepage', () => {
-        let routerMock = spectator.get<Router>(Router);
         routerMock.parseUrl.andReturn({root: {children: {'primary': {segments: [{path: 'a'}]}}}});
         spectator.detectChanges();
 
@@ -53,7 +52,6 @@ describe('CustomBreadcrumbComponent', () => {
     });
 
     it('hideBreadcrumb - primaryUrlSegmentGroup not loaded', () => {
-        let routerMock = spectator.get<Router>(Router);
         routerMock.parseUrl.andReturn({root: {children: {'primary': undefined}}});
         spectator.detectChanges();
 
