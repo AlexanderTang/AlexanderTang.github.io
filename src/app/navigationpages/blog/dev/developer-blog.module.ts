@@ -8,10 +8,12 @@ import {ReactiveSpringComponent} from './post/reactive-spring.component';
 import {RsHsComponent} from './post/rs-hs.component';
 import {HighlightModule} from 'ngx-highlightjs';
 import {NgPlhComponent} from './post/ng-plh.component';
+import {SpectatorTestingComponent} from './post/spectator-testing.component';
 
 @NgModule({
     imports: [SharedModule, DeveloperBlogRoutingModule, HighlightModule],
-    exports: [DeveloperBlogComponent, GraphqlComponent, RsHsComponent, ReactiveSpringComponent, NgPlhComponent],
+    exports: [DeveloperBlogComponent, GraphqlComponent, RsHsComponent, ReactiveSpringComponent, NgPlhComponent,
+        SpectatorTestingComponent],
     declarations: [DeveloperBlogRoutingModule.components],
     providers: [{provide: 'DEV_ROUTES', useValue: DEV_BLOG_ROUTES}]
 })
