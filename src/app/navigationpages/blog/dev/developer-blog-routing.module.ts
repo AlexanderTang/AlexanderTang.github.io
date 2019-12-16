@@ -3,7 +3,6 @@ import {RouterModule, Routes} from '@angular/router';
 
 import {DeveloperBlogComponent} from './developer-blog.component';
 import {GraphqlComponent} from './post/graphql.component';
-import {ReactiveSpringComponent} from './post/reactive-spring.component';
 import {RoutesWithPathPrefix} from '../../../shared/interfaces';
 import {RsHsComponent} from './post/rs-hs.component';
 import {NgPlhComponent} from './post/ng-plh.component';
@@ -27,6 +26,6 @@ export const DEV_BLOG_ROUTES: RoutesWithPathPrefix = {
     exports: [RouterModule]
 })
 export class DeveloperBlogRoutingModule {
-    static components = [DeveloperBlogComponent, GraphqlComponent, RsHsComponent, ReactiveSpringComponent, NgPlhComponent,
+    static components = [DeveloperBlogComponent, GraphqlComponent, RsHsComponent, NgPlhComponent,
         SpectatorTestingComponent];
 }
