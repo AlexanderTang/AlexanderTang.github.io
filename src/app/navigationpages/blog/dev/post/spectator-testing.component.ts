@@ -18,8 +18,8 @@ export class SpectatorTestingComponent extends AbstractBlogPost {
     }
 
     postAbstract(): string {
-        return "Reduce boilerplate test code with Spectator. Run unit tests in parallet without a browser with Jest. \
-            see some real examples how to use them in this article.";
+        return "Reduce boilerplate test code with Spectator. Run unit tests in parallel without a browser with Jest. \
+            See some real examples how to use them in this article.";
     }
 
     postCategories(): PostCategory[] {
