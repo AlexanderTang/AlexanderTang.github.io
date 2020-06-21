@@ -1,0 +1,48 @@
+<app-blog-post
+    [postTitle]="postTitle()"
+    [postDate]="postDate()"
+    [postAbstract]="postAbstract()">
+
+    <p>If you have <a [routerLink]="['/blogs/game/shenzhen-io']">read my post about TIS-100</a>, then you already
+        understand the main principle of Shenzhen I/O. Basically the game features puzzles that you need to solve
+        by chaining hardware components together. Each component can be implemented by a set of low level programming
+        instructions.</p>
+
+    <p>The tutorial level is the best example to illustrate this. The following image shows the expected output:</p>
+
+    <img class="img-fluid rounded mb-4" src="assets/images/shenzhen_io/output.png" alt="">
+
+    <p>The <i>active</i> component expects a 0 signal for 6 seconds, then 100 signal for another 6 seconds and rinse
+        repeat. The <i>network</i> component routine is slightly more complicated:</p>
+
+    <ul>
+        <li>0 signal for 4 seconds,</li>
+        <li>100 signal for 2 seconds,</li>
+        <li>0 signal for 1 second,</li>
+        <li>100 signal for 1 second,</li>
+        <li>rinse repeat</li>
+    </ul>
+
+    <p>Each implemented component computes one output:</p>
+
+    <img class="img-fluid rounded mb-4" src="assets/images/shenzhen_io/components.png" alt="">
+
+    <p>And running the program will verify the solution:</p>
+
+    <img class="img-fluid rounded mb-4" src="assets/images/shenzhen_io/simulation.gif" alt="">
+
+    <p>As the game progresses many different types of components with their own traits become unlocked. Part of the fun
+        is not just finding the solution, but finding an optimal one. Different types of components have a different
+        price, so
+        you could try and optimize in terms of cost. Or you could optimize in terms of power usage. If you have friends
+        on Steam who play this game, you can compare high scores at the end. This may add a bit of competitiveness if
+        that motivates you.</p>
+
+    <p>The amount of instructions in this game are more extensive than the ones in TIS-100. This makes the learning
+        curve
+        in terms of the commands available more steep in Shenzhen I/O, but it allows more complex problems to be tackled
+        as well. The limited amount of instruction space in TIS-100 and the fact that things like multiplication took
+        so many instructions was definitely a limiting factor in the scope of problems that could be solved for that
+        game. Both games provide a challenge in their own way. It does not require any technical background to enjoy
+        this game, just a problem-solving mindset will suffice.</p>
+</app-blog-post>
