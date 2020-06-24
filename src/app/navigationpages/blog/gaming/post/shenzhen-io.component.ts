@@ -13,7 +13,7 @@ export class ShenzhenIoComponent extends AbstractBlogPost {
     }
 
     postDate(): Date {
-        return new Date(2020, 6, 10);
+        return new Date(2020, 6, 21);
     }
 
     postAbstract(): string {
