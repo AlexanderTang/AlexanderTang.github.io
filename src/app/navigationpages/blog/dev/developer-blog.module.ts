@@ -11,8 +11,7 @@ import {SpectatorTestingComponent} from './post/spectator-testing.component';
 
 @NgModule({
     imports: [SharedModule, DeveloperBlogRoutingModule, HighlightModule],
-    exports: [DeveloperBlogComponent, GraphqlComponent, RsHsComponent, NgPlhComponent,
-        SpectatorTestingComponent],
+    exports: [DeveloperBlogRoutingModule.components],
     declarations: [DeveloperBlogRoutingModule.components],
     providers: [{provide: 'DEV_ROUTES', useValue: DEV_BLOG_ROUTES}]
 })
