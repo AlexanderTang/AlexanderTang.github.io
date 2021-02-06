@@ -1,7 +1,7 @@
 import {IBlogPost, RoutesWithPathPrefix} from '../../shared/interfaces';
 import {BlogPostUtils} from './blogPostUtils';
 import {Route} from '@angular/router';
-import {GraphqlComponent} from '../../navigationpages/blog/dev/post/graphql.component';
+import {GraphqlComponent} from '../../navigationpages/blog/dev/post/graphql/graphql.component';
 
 describe('BlogPostUtils', () => {
 

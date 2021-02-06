@@ -1,0 +1,105 @@
+<app-blog-post
+    [postTitle]="postTitle()"
+    [postDate]="postDate()"
+    [postAbstract]="postAbstract()">
+
+    <p>The world of AI and image-based text recognition, or optical character recognition (OCR), is evolving quickly
+        the past decades. There are quite a few tools around that can scan images in many languages quite reliably for
+        English and other alphabet-like systems. It can often deal with certain levels of blur, background noise,
+        rotation and other mechanics that may interfere with interpreting the characters.</p>
+
+    <p>The quickly evolving power of hardware has no doubt contributed a lot. Better GPU's and more data sets allow more
+        accurate models to be trained. The rising computational power of the average end user allows results to be
+        gathered more quickly at runtime, which is necessary to create a feasible product.</p>
+
+    <p>I was inspired to develop a tool to detect Chinese characters from images. I am learning Chinese and have a blog
+        section dedicated to this, but I am improving at a slow pace due to the hassle of having to look up so
+        many characters. My aim as a developer is to simplify this manual labor and replace it with a tool that
+        <del>can do the work for me</del>
+        offers a guiding hand. Ideally, it would help me play the game
+        <a [routerLink]="['/blogs/game/fs-intro']"><i>Fate Seeker</i> which I had started a Let's Play
+            series on</a>. It is very time consuming to get through even a few dialogues, not to mention document
+        everything. This made me gave up my endeavor for
+        a while. If this tool becomes a success then I will try to pick up from where I left off (the introduction...).
+    </p>
+
+    <p>I should first mention that Chinese OCR does not seem to be as reliable as English. There are a few difficulties
+        in the Chinese language that may hinder my goal of going from an image to a word-by-word translation:</p>
+    <ul>
+        <li>There are a ton of characters. To correctly identify most common texts, at least the 1500-2000 most
+            frequent characters should be interpretable.
+        </li>
+        <li>Some characters have minuscule differences between them. A badly chosen font will probably cause trouble.
+        </li>
+        <li>The characters may be read left-to-right, right-to-left or top-to-bottom depending on the image.</li>
+        <li>Characters/words may have a different pronunciation or meaning depending on the context they are in.</li>
+    </ul>
+
+    <p>Of course I started with the OCR part. I've tried a few repositories in the past that weren't reliable enough
+        such as <a href="https://tesseract.projectnaptha.com">Tesseract</a>. These repositories keep improving over time
+        so it is worth keeping an eye out for any new releases. But a repository that worked quite well with the few
+        examples I had from Fate Seeker was <a href="https://github.com/JaidedAI/EasyOCR">EasyOCR</a>. I might get
+        better results when I look for Chinese repositories, but I can't read them yet so I shall work with the tools at
+        my disposal.</p>
+
+    <p>EasyOCR returns to me a list of identified character groups along with their bounding rectangle
+        coordinates and accuracy. The accuracy represents how confident we are that the character has been identified
+        correctly. With this list I can mark the identified areas of the screen.
+        I chose to do this in an Angular project. With <a href="https://www.electronjs.org/">Electron</a> on top of it I
+        can build a desktop application. Electron is quite easy to get into and is helpful when you are
+        already familiar with frontend technologies. The drawback is that it uses quite a lot of RAM for even basic
+        funtionality. <a href="https://flutter.dev/docs">Flutter</a> makes a strong competitor to Electron, but it
+        offers only early stage support for Windows right now. It is also based on the less popular Dart language, but I
+        consider that a benefit over Javascript based languages... To be sure I don't run into Windows related problems,
+        I decided to go with Electron anway.</p>
+
+    <p>The next step is to segment the characters into words or stand-alone characters. As mentioned before, the meaning
+        of a character is heavily dependent on the context. This means that two characters are not necessarily always
+        grouped together to form a word since it depends on the sentence. I make use of another library
+        <a href="https://www.npmjs.com/package/nodejieba">Nodejieba</a> to take care of this complicated task for me.
+        For each segmented word I further dissect it into subgroups until a single character is left. It is often easier
+        to memorize the meaning of a word if the meaning of each individual character is understood. For example, a
+        refrigerator (冰箱) is made up of the characters 'ice' and 'box'. A refrigerator is after all an ice box.</p>
+
+    <p>Lastly comes the easy part: translate each of the segmented characters/words. I make use of the
+        <a href="https://www.mdbg.net/chinese/dictionary?page=cc-cedict">CC-CEDICT library</a>, which has been actively
+        maintained since 1997. It is very regularly updated and contains even new terms related to COVID-19.</p>
+
+    <p>We are almost there. I don't want to show all the translations all the time, so I created a transparent
+        fullscreen overlay window that I can show/hide on top of my game with global hotkeys. I bound them to
+        CTRL+ALT+F7/F8. The hotkeys become unbound when I close the program of course so they don't conflict with other
+        programs. I also don't want to show all the translations at once since my screen will become
+        very cluttered. I mark each identified group with a bounding rectangle to clearly show they have been identified
+        and highlight the group on mouse hover. Upon clicking a group, a modal window appears that shows the translation
+        for that group. The final result looks like this:</p>
+
+    <figure>
+        <img class="img-fluid rounded mb-4" src="assets/gifs/fateseeker/main_screen.gif" alt="">
+        <figcaption>Main screen</figcaption>
+    </figure>
+
+    <p>This example captures the main screen. I open the overlay with CTRL+ALT+F7 which starts immediately starts the
+        screen capturing and interpreting process. The results from the title are not so good, probably due to the
+        calligraphic writing and perhaps the background as well. The menu options have been captured correctly though
+        and are very useful to me.</p>
+
+    <p>I should emphasize that this is just a minimal working product. I am aware that no UX designer would approve
+        of such a layout and the UI has been my bottom priority. Performance-wise I am very impressed however. It only
+        takes about 2 to 3 seconds for the
+        scanning to complete on average. This test has been performed on a 1920x1080 screen. To turn this into a viable
+        product, the runtime should be improved a bit more in my opinion but OCR really has come a long way.
+        On another note, the
+        trailing mouse you can see in the gif was not there when I was performing this test. It comes from
+        <a href="https://www.screentogif.com/">the gifrecorder that I was using</a>.</p>
+
+    <p>Here's another example:</p>
+
+    <figure>
+        <img class="img-fluid rounded mb-4" src="assets/gifs/fateseeker/character_screen.gif" alt="">
+        <figcaption>Character screen</figcaption>
+    </figure>
+
+    <p>Considering that the model has not been trained on any data from this game but is general purpose oriented, makes
+        it that much more amazing that the characters are interpreted so well. It manages to perform well despite all
+        the background noise. I have no excuses left not to play the game!</p>
+</app-blog-post>

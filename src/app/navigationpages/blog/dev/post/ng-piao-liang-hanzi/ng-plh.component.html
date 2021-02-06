@@ -1,0 +1,95 @@
+<app-blog-post
+    [postTitle]="postTitle()"
+    [postDate]="postDate()"
+    [postAbstract]="postAbstract()">
+
+    <p>I was writing another post earlier about <a routerLink="/blogs/cn-study/de-particles">the differences between
+        'de' particles in Chinese</a>, when the need arose to format Chinese characters and their pinyin (alphabetical
+        system based on Chinese pronunciation) in a nice manner. As someone who would never go back to Word Document
+        after having experienced LateX, I expect my writing time to be devoted to content and not layout (re)formatting.
+        Ideally I just write my Chinese characters and pinyin and some framework will format them together in a way that
+        is visually pleasing for me.</p>
+
+    <p>I searched for a npm package that would suit my needs but I was surprised not to be able to find one.
+        Either my Google search skills were failing me or there simply was no solution available at this time. Or
+        perhaps it was available in Chinese, but my Chinese reading skills are not nearly advanced enough to find it. So
+        I tried searching inspiration from other websites that incorporate this and what I find looks like this:</p>
+
+    <div class="row">
+        <div class="col-4">
+            <img class="img-fluid rounded" src="assets/images/chinese_formatting_website1.png" alt="">
+        </div>
+        <div class="col-6">
+            <img class="img-fluid rounded" src="assets/images/chinese_formatting_website2.png" alt="">
+        </div>
+    </div>
+    <br>
+
+    <p>I don't like the look of this too much. The pinyin is decoupled from the characters typically when the pinyin has
+        a long sequence of characters. I find it more visually appealing with the pinyin attached to its character. The
+        <a href="https://w3c.github.io/i18n-drafts/articles/ruby/markup.en">Ruby Markup</a> provides something close to
+        what I am looking for:</p>
+
+    <pre><code [languages]="['xml']"
+               [highlight]="'<ruby><rb>我</rb><rt>wǒ</rt> <rb>的</rb><rt>dē</rt> <rb>名</rb><rt>míng</rt> <rb>字</rb><rt>zì</rt></ruby>'">
+    </code></pre>
+
+    <p>will look like this:</p>
+
+    <p class="chinese-font-size">
+        <ruby>
+            <rb>我</rb>
+            <rt>wǒ</rt>
+            <rb>的</rb>
+            <rt>dē</rt>
+            <rb>名</rb>
+            <rt>míng</rt>
+            <rb>字</rb>
+            <rt>zì</rt>
+        </ruby>
+    </p>
+
+    <p>But writing whole sentences like this is going to get frustrating fast and hard to maintain. The Ruby Markup
+        language offers some short notations that allow the <b>rb</b> tags to be removed for example, which is a step in
+        the right direction. The following is equivalent to the above example:</p>
+
+    <pre><code [languages]="['xml']"
+               [highlight]="'<ruby>我<rt>wǒ</rt>的<rt>dē</rt>名<rt>míng</rt>字<rt>zì</rt></ruby>'">
+    </code></pre>
+
+    <p>I want to be able to copy paste or write whole sentences and add the pinyin separately without them intertwining
+        like this. Since no such library seemed to exist, I set out to make my own. I have the most experience with
+        Angular and my frontend is often built with Angular, so I created an Angular module. The html template will make
+        use of Ruby Markup.</p>
+
+    <p>The project starts out simple enough. I accept an input that accepts Chinese characters, an input for the
+        corresponding pinyin and loop over both inputs to match them:</p>
+
+    <pre><code [languages]="['xml']"
+               [highlight]="'<ng-piao-liang-hanzi [chineseCharacters]=&quot;\'我的名字\'&quot; [pinyin]=&quot;\'wǒ dē míng zì\'&quot;></ng-piao-liang-hanzi>'">
+    </code></pre>
+
+    <p>which will have the same output as above again. The pinyin is split by empty spaces. Add some fault tolerance to
+        allow for more or less pinyin to be defined than the amount of Chinese characters and we have a first viable
+        prototype. I found interesting npm packages including <a href="https://www.npmjs.com/package/chinese-to-pinyin">chinese-to-pinyin</a>
+        which translates a set of Chinese characters to their pinyin. I incorporated this package into my own to allow
+        for automatic pinyin generation! We can now write:</p>
+
+    <pre><code [languages]="['xml']"
+               [highlight]="'<ng-piao-liang-hanzi [chineseCharacters]=&quot;\'我的名字\'&quot;></ng-piao-liang-hanzi>'">
+    </code></pre>
+
+    <p>and it will still return the same output! This is much closer to what I had in mind originally. If the generated
+        pinyin is not correct it can still be overridden manually with the <code class="github-code">pinyin</code> input
+        variable. There are more features available: pinyin in tone number format, pinyin skipping, pinyin for
+        alphabetical letters and css styling. See more details about the features and/or download <a
+            href="https://www.npmjs.com/package/ng-piao-liang-hanzi">the package at npm</a>.</p>
+
+    <p>The code is available <a href="https://github.com/AlexanderTang/PiaoLiangHanzi">in my repository on github</a>.
+        Feel free to log issues, feature requests or even add pull requests.</p>
+
+    <small>It managed to get 77 downloads within 17 hours of release! I am pleasantly surprised considering this is my
+        first npm package.
+    </small>
+
+</app-blog-post>
