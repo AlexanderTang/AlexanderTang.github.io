@@ -11,7 +11,8 @@ describe('SearchResultsComponent', () => {
     const createComponent = createRoutingFactory({
         component: SearchResultsComponent,
         mocks: [BlogRoutingService],
-        declarations: [MockComponent(BlogOverviewComponent)]
+        declarations: [MockComponent(BlogOverviewComponent)],
+        detectChanges: false
     });
 
     const blogPosts: IBlogPost[] = [
