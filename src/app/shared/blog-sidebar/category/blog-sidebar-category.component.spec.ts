@@ -46,14 +46,14 @@ describe('BlogSidebarCategoryComponent', () => {
     });
 
     it('getTop6Categories', () => {
-        let blogRoutingServiceMock: SpyObject<BlogRoutingService> = spectator.get<BlogRoutingService>(BlogRoutingService);
+        const blogRoutingServiceMock: SpyObject<BlogRoutingService> = spectator.get<BlogRoutingService>(BlogRoutingService);
         blogRoutingServiceMock.getAllBlogPosts.andReturn(blogPosts);
         spectator.component.ngOnInit();
 
-        let categories = new Map();
-        categories.set(PostCategory.TechTools, 3);
-        categories.set(PostCategory.ChineseGrammar, 2);
-        categories.set(PostCategory.Angular, 1);
+        const categories = [
+            [PostCategory.TechTools, 3],
+            [PostCategory.ChineseGrammar, 2],
+            [PostCategory.Angular, 1]];
 
         expect(spectator.component.getTop6Categories()).toEqual(categories);
     });

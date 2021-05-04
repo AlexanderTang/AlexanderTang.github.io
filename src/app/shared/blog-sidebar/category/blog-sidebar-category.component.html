@@ -2,9 +2,9 @@
     <h5 class="card-header">Categories</h5>
     <div class="card-body">
 
-        <div class="list-unstyled mb-0" *ngFor="let categoryEntry of getTop6Categories() | keyvalue">
-            <a [routerLink]="['/search-results']" [queryParams]="{category: categoryEntry.key}">
-                {{getEnumString(categoryEntry.key)}} ({{categoryEntry.value}})</a>
+        <div class="list-unstyled mb-0" *ngFor="let categoryEntry of getTop6Categories()">
+            <a [routerLink]="['/search-results']" [queryParams]="{category: categoryEntry[0]}">
+                {{getEnumString(categoryEntry[0])}} ({{categoryEntry[1]}})</a>
         </div>
     </div>
 </div>

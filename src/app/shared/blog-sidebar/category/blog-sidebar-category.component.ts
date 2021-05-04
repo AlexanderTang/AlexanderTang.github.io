@@ -19,12 +19,12 @@ export class BlogSidebarCategoryComponent implements OnInit {
         this.initCategoryFrequencyMap();
     }
 
-    getTop6Categories(): Map<PostCategory, number> {
-        return new Map([...this.categoryFrequencyMap]
+    getTop6Categories(): [PostCategory, number][] {
+        return [...this.categoryFrequencyMap]
             .sort((categoryEntry1, categoryEntry2) => {
                 return categoryEntry2[1] - categoryEntry1[1]; // sort by category frequency in DESC order
             })
-            .slice(0, 6));
+            .slice(0, 6);
     }
 
     getEnumString(number: number): string {
