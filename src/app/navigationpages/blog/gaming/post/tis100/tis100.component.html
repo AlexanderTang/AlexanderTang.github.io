@@ -1,0 +1,86 @@
+<app-blog-post
+    [postTitle]="postTitle()"
+    [postDate]="postDate()"
+    [postAbstract]="postAbstract()">
+
+    <p>The game starts off with a couple of very easy to solve puzzles to get you acquainted with the available
+        commands. From the very first level you will have to rely on the manual that you get with the game. Although a
+        background in programming will help, this game is accessible to everyone with an interest
+        in problem solving. There are not that many commands (about 20) to learn either. In fact, the few amount of
+        commands will feel rather limiting quickly.</p>
+
+    <p>The trick of the game will be to carry out 'advanced' computations with the limited commands and space available.
+        Even simple things like multiplication can become quite a challenge when only addition and subtraction are
+        available. Let's see an example:</p>
+
+    <img class="img-fluid rounded mb-4" src="assets/images/tis100_lvl2_basic.png" alt="">
+
+    <p>This is the second level of the game. On the top left you see a description of what your program needs to do.
+        Below that you see two columns <b>IN.A</b> and <b>OUT.A</b> which correspond to the input and output of your
+        program respectively. In this case we need to get the input, double it and send it to the output.</p>
+
+    <p>On the right side is the implemented solution. The <code class="github-code">MOV</code> command takes two
+        parameters: the first one is the source
+        location to retrieve a value from and the second is the target location to move the value to. The box in the
+        middle of the upper row is adjacent to the input <b>IN.A</b> so we need to write something that retrieves the
+        input and do something with it. <code class="github-code">MOV UP, DOWN</code> takes the value of the input and
+        moves it to the box below.</p>
+
+    <p>Moving on to the box in the middle of the second row, we get the input value that was passed through the previous
+        box. <code class="github-code">MOV UP, ACC</code> moves the value into the accumulator <i>ACC</i> of that box,
+        effectively storing the value into its memory. The box now moves onto the second command: <code
+            class="github-code">ADD ACC</code>. <code class="github-code">ADD</code> will add the parameter value to the
+        value of the accumulator and store it there. For example if the accumulator stores the value 5 and it runs <code
+            class="github-code">ADD 2</code>, the accumulator will now store the value 7. Executing <code
+            class="github-code">ADD ACC</code> means: get the current value of the accumulator, add that to the current
+        value of the accumulator and store the result to the accumulator (overwriting the previously stored value). This
+        effectively doubles the stored value in the accumulator. Afterwards we move on to the last line of the box:
+        <code class="github-code">MOV ACC, DOWN</code> which means take the value of the accumulator and move it to the
+        box below.</p>
+
+    <p>Similarly in the remaining two boxes we pass the value to <b>OUT.A</b> on the bottom right. When a box finishes
+        the last line it jumps back to the first line. If we run the program with this solution the first box will take
+        the first input value, pass it down to the box below. It then takes the second value and passes it to the box
+        below and so on. Running the program will signal that all tests have passed and show a screen with statistics on
+        our performance:</p>
+
+    <img class="img-fluid rounded mb-4" src="assets/images/tis100_lvl2_basic_solution.png" alt="">
+
+    <p>While this solution works, we are not particularly happy with it. Think back about the middle box, which does all
+        the heavy weight lifting. It needs to execute 3 lines of codes compared to the other boxes, which only need to
+        execute 1. When the box on the first row takes the second input value, it is unable to pass this onto the box in
+        the second row yet because it is still processing the first value. Only when all three lines have been executed
+        will it accept another value from the box above. If you look back on the first picture you will see that the
+        middle box has an idle time of 2% while the other 3 boxes are idle 51% of the time! That's a lot of time spent
+        doing nothing.</p>
+
+    <p>Now we get to the real meat of the game: how can I make my solution <i>faster</i> or <i>use fewer lines of
+        code</i>? Usually it will be a choice between one of these two optimizations. Let's try to
+        improve the solution with processing speed in mind. The middle box is spending the most amount of time computing
+        things. One option would be to try to split the task of doubling a number into subtasks that we outsource to
+        nearby boxes (on the left and right) and merge back together when they're done. However the task of doubling a
+        number is too small to split as it only takes two lines of code. Moving the values around and merging the result
+        is more costly than simply computing the result on the spot.</p>
+
+    <p>A second option is to have more routes performing the same operations. The following shows a faster solution:</p>
+
+    <img class="img-fluid rounded mb-4" src="assets/images/tis100_lvl2_optimized.png" alt="">
+
+    <p> The first box functions as a <a
+        href="https://www.nginx.com/resources/glossary/load-balancing/">load balancer</a> which evenly splits work among
+        multiple boxes: first value goes to the right, second value goes below, third value goes to the right, fourth
+        value goes below, and so on. The third column now mimicks the middle column and computes double values in
+        parallel. The last box has been modified to <code class="github-code">MOV ANY, DOWN</code> which simply means
+        that any input to the box will automatically get passed down. This is the new result screen:</p>
+
+    <img class="img-fluid rounded mb-4" src="assets/images/tis100_lvl2_optimized_solution.png" alt="">
+
+    <p>We now only need 84 cycles to calculate everything compared to 160 before! It did come at a cost of 5 extra lines
+        of code. The idle time has also gone down considerably. Idle time is a good way to identify bottlenecks: if one
+        box is constantly computing things while others are doing nothing, then try and find ways to offload work to
+        other boxes.</p>
+
+    <p>The challenge and fun is not just in finding a solution but finding an optimal solution. This will get
+        progressively harder as each box has a limitation of 15 lines of code. This sometimes forces you to split tasks
+        across multiple boxes where it might have been more efficient if you could do it in one box.</p>
+</app-blog-post>
