@@ -1,5 +1,5 @@
 'use strict';
-import {Component, Inject} from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {IBlogPost, RoutesWithPathPrefix} from '../../../shared/interfaces';
 import {BlogPostUtils} from '../../../core/util/blogPostUtils';
 
@@ -7,7 +7,7 @@ import {BlogPostUtils} from '../../../core/util/blogPostUtils';
     selector: 'app-gaming-blog',
     templateUrl: './gaming-blog.component.html'
 })
-export class GamingBlogComponent {
+export class GamingBlogComponent implements OnInit {
 
     blogTitle = 'Gaming Blog';
     posts: IBlogPost[];

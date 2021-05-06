@@ -4,7 +4,7 @@
     "scripts": {
         "ng": "ng",
         "build": "ng build --prod --base-href https://AlexanderTang.github.io --aot",
-        "deploy": "ngh --branch=master",
+        "deploy": "npm run build && ngh --branch=master",
         "test": "jest",
         "lint": "ng lint",
         "e2e": "ng e2e",

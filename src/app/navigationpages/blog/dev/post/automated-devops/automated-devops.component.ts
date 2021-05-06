@@ -7,7 +7,7 @@ import {PostCategory} from '../../../../../core/enum/postCategory';
     selector: 'app-automated-devops',
     templateUrl: './automated-devops.component.html'
 })
-export class AutomatedDevopsComponent extends AbstractBlogPost{
+export class AutomatedDevopsComponent extends AbstractBlogPost {
 
     postTitle(): string {
         return 'Automated DevOps with Docker';
